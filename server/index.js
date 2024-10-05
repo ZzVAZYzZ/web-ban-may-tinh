@@ -13,9 +13,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.use('/', require("./routes/postTransactionRoute"));
+app.use('/', require("./routes/postTransactionRoute"))
+app.use('/', require("./routes/checkTransactionRoute"));
 
 const {connectDb} = require('./databases/mongodb/connectMongo')
+
+
+
 
 
 
@@ -23,7 +27,7 @@ connectDb()
 
 
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
   res.send("Hello World!");
 });
 

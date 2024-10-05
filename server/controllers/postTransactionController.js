@@ -1,7 +1,6 @@
 const { AES } = require("../classes/AES");
 const { DateTime } = require("luxon");
 const postTransactionModel = require("../models/mongodb/postTransactionModel");
-const mongoose = require("mongoose");
 
 const postTransaction = async (req, res, next) => {
   const { userInformation, amount, cardInformation, productsInformation } =
@@ -54,7 +53,7 @@ const postTransaction = async (req, res, next) => {
     transactionId: savedTransaction._id,
   };
 
-  console.log(decryptedTransaction);
+  // console.log(decryptedTransaction);
 
   
 
