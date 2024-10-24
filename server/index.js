@@ -13,10 +13,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.use('/', require("./routes/postTransactionRoute"))
+app.use('/', require("./routes/postTransactionRoute"));
 app.use('/', require("./routes/checkTransactionRoute"));
 
-const {connectDb} = require('./databases/mongodb/connectMongo')
+const {connectDb} = require('./databases/mongodb/connectMongo');
 
 
 

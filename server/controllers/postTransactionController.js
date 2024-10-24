@@ -3,7 +3,7 @@ const { DateTime } = require("luxon");
 const postTransactionModel = require("../models/mongodb/postTransactionModel");
 
 const postTransaction = async (req, res, next) => {
-  const { userInformation, amount, cardInformation, productsInformation } =
+  const { userInformation, amount, cardInformation, productsInformation, paymentMethod } =
     req.body;
   const time = String(
     DateTime.now().setZone("Asia/Ho_Chi_Minh").toFormat("yyyy-MM-dd HH:mm:ss")
@@ -18,7 +18,14 @@ const postTransaction = async (req, res, next) => {
       address: aes.runDecrypt(userInformation.address, process.env.AES_KEY),
     },
     amount: aes.runDecrypt(amount, process.env.AES_KEY),
-    cardInformation: {
+    cardInformation: {},
+    productsInformation: [],
+    paymentMethod: aes.runDecrypt(paymentMethod, process.env.AES_KEY),
+    time: time,
+  };
+
+  if(cardInformation!==undefined&&aes.runDecrypt(paymentMethod, process.env.AES_KEY)==="VISA"){
+    decryptedTransaction.cardInformation = {
       cardNumber: aes.runDecrypt(
         cardInformation.cardNumber,
         process.env.AES_KEY
@@ -32,16 +39,15 @@ const postTransaction = async (req, res, next) => {
         cardInformation.cardHolder,
         process.env.AES_KEY
       ),
-    },
-    productsInformation: [],
-    time: time,
-  };
+    }
+  }
 
   productsInformation.forEach((product) => {
     decryptedTransaction.productsInformation.push({
       nameProduct: aes.runDecrypt(product.nameProduct, process.env.AES_KEY),
       price: Number(aes.runDecrypt(product.price, process.env.AES_KEY)),
       productId: aes.runDecrypt(product.productId, process.env.AES_KEY),
+      quantity: Number(aes.runDecrypt(product.quantity, process.env.AES_KEY)),
     });
   });
 
@@ -52,11 +58,7 @@ const postTransaction = async (req, res, next) => {
     status: "success",
     transactionId: savedTransaction._id,
   };
-
   // console.log(decryptedTransaction);
-
-  
-
   res.send({
     time: aes.runEncrypt(responseData.time, process.env.AES_KEY),
     status: aes.runEncrypt(responseData.status, process.env.AES_KEY),

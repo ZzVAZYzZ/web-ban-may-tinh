@@ -13,14 +13,26 @@ const checkTransaction = async (req,res,next) => {
         }
         
         const queryTransaction = await postTransactionModel.findById(decryptedRequest.transactionId);
-
+        
         if(queryTransaction.userInformation.phone===decryptedRequest.phone){
             res.send({
                 res:{
-                    userInformation: queryTransaction.userInformation,
-                    productsInformation: queryTransaction.productsInformation,
-                    amount: queryTransaction.amount,
-                    time: queryTransaction.time
+                    userInformation: {
+                        name:  aes.runEncrypt(queryTransaction.userInformation.name,process.env.AES_KEY) ,
+                        phone: aes.runEncrypt(queryTransaction.userInformation.phone,process.env.AES_KEY) ,
+                        note: aes.runEncrypt(queryTransaction.userInformation.note,process.env.AES_KEY) ,
+                        address: aes.runEncrypt(queryTransaction.userInformation.address,process.env.AES_KEY) 
+                    } ,
+                    productsInformation: queryTransaction.productsInformation.map((product)=>{
+                        return{
+                            nameProduct: aes.runEncrypt(product.nameProduct,process.env.AES_KEY),
+                            price: aes.runEncrypt(product.price.toString(),process.env.AES_KEY),
+                            productId: aes.runEncrypt(product.productId,process.env.AES_KEY),
+                            quantity: aes.runEncrypt(product.quantity.toString(),process.env.AES_KEY),
+                        }
+                    }),
+                    amount: aes.runEncrypt(queryTransaction.amount.toString(),process.env.AES_KEY),
+                    time: aes.runEncrypt(queryTransaction.time,process.env.AES_KEY)
                 },
                 status:"success",
                 message:"successed check transaction"

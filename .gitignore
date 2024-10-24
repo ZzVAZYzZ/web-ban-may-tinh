@@ -2,3 +2,5 @@
 /server/.env
 /client/node_modules
 /client/build
+/client/.env
+/client/.env.local
