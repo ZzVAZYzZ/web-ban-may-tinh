@@ -15,7 +15,7 @@ const initialState = {
 export const postTransaction = createAsyncThunk(
   'API/postTransaction',
   async (payloadObject) => {
-    const responseData = await axios.post('http://localhost:8000/postTransaction',payloadObject);
+    const responseData = await axios.post('http://localhost:8000/api/transaction/postTransaction',payloadObject);
     const aes = new AES();
     const decryptedData = {
       time: aes.runDecrypt(responseData.data.time,process.env.REACT_APP_AES_KEY),

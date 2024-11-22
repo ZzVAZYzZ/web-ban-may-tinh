@@ -42,7 +42,10 @@ const CheckTransactionPage = () => {
     }
   }
 
-  
+  useEffect(()=>{
+    console.log(responseTransactionData);
+    
+  },[responseTransactionData])
 
   const checkTransaction = (id, phone) => {
       const bodyRequest = {
@@ -50,7 +53,7 @@ const CheckTransactionPage = () => {
         phone: aes.runEncrypt(phone, process.env.REACT_APP_AES_KEY),
       };
       axios
-        .post("http://localhost:8000/checkTransaction", bodyRequest)
+        .post("http://localhost:8000/api/transaction/checkTransaction", bodyRequest)
         .then((res) => {
           console.log(res.data);
           return res.data;
@@ -124,6 +127,10 @@ const CheckTransactionPage = () => {
         })
         .catch((err) => {
           console.log(err);
+          setRespnoseTransactionData({
+            status: "failed"
+          });
+          
         });
   };
 

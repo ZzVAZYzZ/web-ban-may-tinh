@@ -44,27 +44,36 @@ const FinishTransaction = () => {
         process.env.REACT_APP_AES_KEY
       ),
     };
-    if (
-      userInformation.name !== "" &&
-      userInformation.address !== "" &&
-      userInformation.phone !== "" &&
-      amount !== 0 &&
-      cardInformation.cardNumber !== "" &&
-      cardInformation.expirtTime !== "" &&
-      cardInformation.cardHolder !== "" &&
-      cardInformation.CSC !== "" &&
-      productsInformation.length !== 0
-    ) {
-        productsInformation.forEach((product) => {
-            payload.productsInformation.push({
-              nameProduct: aes.runEncrypt(product.productName, process.env.REACT_APP_AES_KEY),
-              price: aes.runEncrypt(String(product.price), process.env.REACT_APP_AES_KEY),
-              productId: aes.runEncrypt(product.productId, process.env.REACT_APP_AES_KEY),
-              quantity: aes.runEncrypt(String(product.quantity), process.env.REACT_APP_AES_KEY),
-            });
-        });
-      reduxDispatch(postTransaction(payload));
-    }
+    // if (
+    //   userInformation.name !== "" &&
+    //   userInformation.address !== "" &&
+    //   userInformation.phone !== "" &&
+    //   amount !== 0 &&
+    //   cardInformation.cardNumber !== "" &&
+    //   cardInformation.expirtTime !== "" &&
+    //   cardInformation.cardHolder !== "" &&
+    //   cardInformation.CSC !== "" &&
+    //   productsInformation.length !== 0
+    // ) {
+    //     productsInformation.forEach((product) => {
+    //         payload.productsInformation.push({
+    //           nameProduct: aes.runEncrypt(product.productName, process.env.REACT_APP_AES_KEY),
+    //           price: aes.runEncrypt(String(product.price), process.env.REACT_APP_AES_KEY),
+    //           productId: aes.runEncrypt(product.productId, process.env.REACT_APP_AES_KEY),
+    //           quantity: aes.runEncrypt(String(product.quantity), process.env.REACT_APP_AES_KEY),
+    //         });
+    //     });
+    //   reduxDispatch(postTransaction(payload));
+    // }
+    productsInformation.forEach((product) => {
+      payload.productsInformation.push({
+        nameProduct: aes.runEncrypt(product.productName, process.env.REACT_APP_AES_KEY),
+        price: aes.runEncrypt(String(product.price), process.env.REACT_APP_AES_KEY),
+        productId: aes.runEncrypt(product.productId, process.env.REACT_APP_AES_KEY),
+        quantity: aes.runEncrypt(String(product.quantity), process.env.REACT_APP_AES_KEY),
+      });
+    });
+    reduxDispatch(postTransaction(payload));
   }, []);
 
   useEffect(() => {
