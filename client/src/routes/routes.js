@@ -12,6 +12,9 @@ import PaymentMethodSection from "../pages/cartPage/pages/paymentMethodSection";
 import VisaSection from "../pages/cartPage/pages/visaSection";
 import CheckBillSection from "../pages/cartPage/pages/checkBillSection";
 import FinishTransaction from "../pages/cartPage/pages/finishTransaction";
+import LoginPage from "../pages/loginPage/loginPage";
+import AdminPage from "../pages/adminPage/adminPage";
+import UserPage from "../pages/userPage/userPage";
 
 export default function MainRoute() {
     return (
@@ -20,6 +23,8 @@ export default function MainRoute() {
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="check-transaction" element={<CheckTransactionPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="admin" element={<AdminPage />} />
             <Route path="cart" element={<CartPage />} >
               <Route index element={<CartSection />} />
               <Route path="user-information-section" element={<UserInformationSection />} />
@@ -29,6 +34,7 @@ export default function MainRoute() {
             </Route>
             <Route path="visa-section" element={<VisaSection />} />
             <Route path="product-detail/:productId" element={<ProductDetailPage />} />
+            <Route path="user/:userId" element={<UserPage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="*" element={<NoPage />} />
           </Route>

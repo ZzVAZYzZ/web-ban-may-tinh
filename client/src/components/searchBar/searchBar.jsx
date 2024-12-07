@@ -58,7 +58,7 @@ const SearchBar = () => {
           onChange={(e) => handleSearchChange(e)}
           onBlur={()=>{
             if(!isMouseOver){
-              console.log(isFocus)
+              // console.log(isFocus)
               setIsFocus(false);
             }
             

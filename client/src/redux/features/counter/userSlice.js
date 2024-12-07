@@ -2,6 +2,13 @@ import { createSlice } from "@reduxjs/toolkit"
 
 
 const initialState = {
+    userAccount:{
+      email:"",
+      id:"",
+      role:"",
+      username:"",
+      vip:0
+    },
     userInformation:{
         name:"",
         address:"",
@@ -42,9 +49,13 @@ export const userSlice = createSlice({
       },
       setCardInformation(state, action){
         state.cardInformation = action.payload;
+      },
+      setUserAccount(state, action){
+        state.userAccount = action.payload;
+        // console.log(action.payload);
       }
     },
   })
 
-  export const { setUserName,setUserAddress,setUserPhone,setUserNote,setPaymentMethod,setCardInformation } = userSlice.actions;
+  export const { setUserName,setUserAddress,setUserPhone,setUserNote,setPaymentMethod,setCardInformation, setUserAccount } = userSlice.actions;
   export default userSlice.reducer
