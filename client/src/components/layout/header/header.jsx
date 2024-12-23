@@ -17,7 +17,7 @@ const Header = () => {
     };
     try {
       await axios.post(
-        "http://localhost:8000/api/users/logout",
+        "https://localhost:8000/api/users/logout",
         payloadOption,
         { withCredentials: true }
       );

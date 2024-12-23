@@ -53,7 +53,7 @@ const CheckTransactionPage = () => {
         phone: aes.runEncrypt(phone, process.env.REACT_APP_AES_KEY),
       };
       axios
-        .post("http://localhost:8000/api/transaction/checkTransaction", bodyRequest)
+        .post("https://localhost:8000/api/transaction/checkTransaction", bodyRequest)
         .then((res) => {
           console.log(res.data);
           return res.data;

@@ -6,13 +6,14 @@ const { pushToBlackListTokenFromRedis } = require("../databases/redis/redis");
 const RefreshModel = require('../models/mongodb/refreshModel');
 const { DateTime } = require("luxon");
 const { AES } = require("../classes/AES");
+const UserDetailModel = require('../models/mongodb/userDetailModel');
+const TransactionModel = require('../models/mongodb/postTransactionModel');
 
 //@desc Register User
 //@route POST /api/users/register
 //@access public
 const register = asyncHandler(async (req,res) => {
     const {username,email,password} = req.body;
-    const aes = new AES();
 
     if(!username||!email||!password){
         res.status(400);
@@ -36,6 +37,15 @@ const register = asyncHandler(async (req,res) => {
         role:"user",
         vip: 0
     });
+
+    await UserDetailModel.create({
+        fullName: "",
+        email: email,
+        address:"",
+        idCard:"",
+        phoneNumber:"",
+    })
+
     if(user){
         res.status(201).json({_id: user.id, email: user.email, username: user.username})
     }else{
@@ -50,6 +60,8 @@ const register = asyncHandler(async (req,res) => {
 //@access private
 const login = asyncHandler( async(req,res) => {
     const {email, password} = req.body;
+    console.log(email);
+    
     const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const userAgent = req.useragent;
     
@@ -125,8 +137,8 @@ const login = asyncHandler( async(req,res) => {
         res.cookie('refreshToken', refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            secure: false,
-            // sameSite: "None",
+            secure: true,
+            sameSite: "None",
             // path: "/"
         });
         res.status(200).json({ 
@@ -143,10 +155,6 @@ const login = asyncHandler( async(req,res) => {
 //@route POST /api/users/current
 //@access private
 const current = (req,res) => {
-
-    console.log(req.user);
-    
-    
     res.status(200).json(req.user)
 }
 
@@ -205,4 +213,68 @@ const refresh = asyncHandler((req,res) => {
     });
 })
 
-module.exports = {login,register,current, logout, refresh}
+
+//@desc getDetail UserDetal
+//@route GET /api/users/auth/getUserDetail
+//@access private
+const getDetail = asyncHandler(async(req,res)=>{
+    const {email} = req.user;
+
+    const userDetail = await UserDetailModel.findOne({email:email});
+    res.status(200).json({
+        userDetail
+    })
+
+})
+//@desc updateDetail UserDetal
+//@route PUT /api/users/auth/updateUserDetail
+//@access private
+const updateDetail = asyncHandler(async(req,res)=>{
+    const {email} = req.user;
+    const {fullName,idCard,address,phoneNumber} = req.body;
+    const userDetail = await UserDetailModel.findOneAndUpdate({email:email},{
+        fullName: fullName,
+        idCard: idCard,
+        phoneNumber: phoneNumber,
+        address: address
+    },{ new: true });
+    res.status(200).json({
+        userDetail,
+    })
+})
+
+//@desc adminAuth 
+//@route PUT /api/admin/auth
+//@access private
+const adminAuth = (req,res) => {
+    res.status(200).json({
+        message:"welcome back admin"
+    })
+}
+
+//@desc adminAuth 
+//@route DELETE /api/admin/auth/deleteTransaction
+//@access private
+const deleteTransaction = asyncHandler(async(req,res) => {
+    const { id } = req.query;
+    if (!id) {
+        res.status(400);
+        throw new Error("Transaction ID is required")
+    }
+    
+    const deletedTransaction = await TransactionModel.findOneAndDelete({ _id: id }).catch(()=>{
+        res.status(404);
+        throw new Error("Transaction not found")
+    })
+
+    if (!deletedTransaction) {
+        res.status(404);
+        throw new Error("Transaction not found")
+    }
+
+    res.status(200).json({
+        message: 'Transaction deleted successfully',
+    });
+})
+
+module.exports = {login,register,current, logout, refresh,getDetail,updateDetail,adminAuth, deleteTransaction}

@@ -86,7 +86,7 @@ const LoginPage = () => {
           username: userRegisterData.username,
           password: userRegisterData.password,
         }
-        const responseData = await axios.post('http://localhost:8000/api/users/register',payloadObject);
+        const responseData = await axios.post('https://localhost:8000/api/users/register',payloadObject);
         if(responseData){
           alert(`${responseData.data.username} registered!`);
           handleChangeFormClick();
@@ -122,7 +122,7 @@ const LoginPage = () => {
           email: userLoginData.email,
           password: userLoginData.password,
         }
-        const responseData = await axios.post('http://localhost:8000/api/users/login',payloadObject,{ withCredentials: true });
+        const responseData = await axios.post('https://localhost:8000/api/users/login',payloadObject,{ withCredentials: true });
         localStorage.setItem('PAYPEE_ACCESSTOKEN',responseData.data.accessToken);
         const userData = JSON.parse(decodeBase64(responseData.data.accessToken.split(".")[1])).user;
         if (userData.role==="admin") {

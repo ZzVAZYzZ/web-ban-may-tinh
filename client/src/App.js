@@ -6,7 +6,7 @@ import { setUserAccount } from "./redux/features/counter/userSlice";
 
 const refreshAccessToken = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/users/refresh', { withCredentials: true });
+    const response = await axios.get('https://localhost:8000/api/users/refresh', { withCredentials: true });
     const newAccessToken = response.data.accessToken;
     localStorage.setItem('PAYPEE_ACCESSTOKEN', newAccessToken);
     return newAccessToken;
@@ -17,7 +17,7 @@ const refreshAccessToken = async () => {
   }
 };
 
-const current = async () => {
+export const current = async () => {
   try {
     const accessToken = localStorage.getItem('PAYPEE_ACCESSTOKEN');
     let config = {
@@ -25,7 +25,7 @@ const current = async () => {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const responseData = await axios.get('http://localhost:8000/api/users/current', config);
+    const responseData = await axios.get('https://localhost:8000/api/users/current', config);
     return responseData.data;
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -37,7 +37,7 @@ const current = async () => {
           },
         };
         try {
-          const responseData = await axios.get('http://localhost:8000/api/users/current', config);
+          const responseData = await axios.get('https://localhost:8000/api/users/current', config);
           return responseData.data;
         } catch (err) {
           console.error("FAILED TO REFRESH TOKEN");
